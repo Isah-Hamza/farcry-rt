@@ -1,24 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Route, Routes, BrowserRouter as Router } from 'react-router-dom'
+import Header from './components/Header';
+import Footer from './components/Footer';
+import Homepage from './pages';
+import Services from './pages/Services';
+import Emergency from './pages/Emergency';
+import DetailedReporting from './pages/DetailedReporting';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Prevention from './pages/Prevention';
+import ContactUs from './pages/ContactUs';
+import Donate from './pages/Donate';
+import FAQ from './pages/FAQ';
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+  return ( 
+    <div className="App flex flex-col">
+      <Router>
+        <Header />
+        <main className=' mt-20'>
+          <Routes>
+            <Route index element={<Homepage />} />
+            <Route path='/services' element={<Services />} />
+            <Route path='/report/emergency' element={<Emergency />} />
+            <Route path='/report/detailed-reporting' element={<DetailedReporting />} />
+            <Route path='/report/faq' element={<FAQ />} />
+            <Route path='/prevention' element={<Prevention />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/register' element={<Register />} />
+            <Route path='/contact-us' element={<ContactUs />} />
+            <Route path='/donate' element={<Donate />} />
+          </Routes>
+        </main>
+      </Router>
     </div>
   );
 }
