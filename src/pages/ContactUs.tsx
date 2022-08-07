@@ -14,7 +14,7 @@ const ContactUs = () => {
           <img className='w-full h-60 sm:h-96 md:h-[500px] object-cover object-center' src={contactUs} alt='' />
           <p className='text-3xl text-gold font-bold absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>Contact Us</p>
         </div>
-        <section className='grid md:grid-cols-2 gap-10 px-[5%] mt-10 mb-20'>
+        <section className='grid md:grid-cols-2 gap-10 px-[5%] mt-16 mb-20'>
             <div className=''>
                 <div className='ml-0 sm:ml-10 md:ml-20 tracking-wide'>
                     <p className='text-gold font-semibold'>How Can You Contact Us?</p>

@@ -15,7 +15,7 @@ const Header = () => {
         subMenu: [
             {text:'Emergency', to:'/report/emergency'},
             {text:'Detailed Reporting', to:'/report/detailed-reporting'},
-            {text:'Support Group', to:'#'},
+            {text:'Support Group', to:'/report/support'},
             {text:'FAQs', to:'/report/faq'},
         ] 
     },

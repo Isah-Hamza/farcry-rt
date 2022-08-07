@@ -34,9 +34,9 @@ const DetailedReporting = () => {
                       <input id='phone' name='phone' className='bg-transparent w-full outline-none border-none ' type='text' placeholder='Your phone number' />
                     </div>
                     <div className='flex flex-col sm:flex-row gap-10 mt-10 text-sm'>
-                      <div className='relative border-b border-b-black pb-2'>
+                      <div className='relative border-b border-b-black pb-2 w-60'>
                         <select className='bg-transparent  border-none outline-none appearance-none w-full'>
-            full          <option value='your_age'>Your Age</option>
+                          <option value='your_age'>Your Age</option>
                           <option value='18'>18</option>
                           <option value='19'>19</option>
                           <option value='20'>20</option>
@@ -109,12 +109,12 @@ const DetailedReporting = () => {
                     <p className='mb-3'>Please provide as much detailed information about the crime and also attach
                       document when necessary </p>
                     <textarea className='mt-1 resize-none shadow-md w-full outline-none border-none text-sm p-4 h-32 bg-white' placeholder='Briefly tell us what is happening...'  />
-                  <div className='flex gap-5 mt-4'> 
-                    <div onClick={() => setCertify(!certify)} className='cursor-pointer flex gap-2 items-center '>
-                      <div  className={`${certify && 'bg-[orange]'} w-[10px] h-[10px] border-2 border-[orange]`}></div>
-                      <p className='text-xs sm:text-sm'>I certify that all information provided therein are true</p>
+                    <div className='flex gap-5 mt-4'> 
+                      <div onClick={() => setCertify(!certify)} className='cursor-pointer flex gap-2 items-center '>
+                        <div  className={`${certify && 'bg-[orange]'} w-[10px] h-[10px] border-2 border-[orange]`}></div>
+                        <p className='text-xs sm:text-sm'>I certify that all information provided therein are true</p>
+                      </div>
                     </div>
-                  </div>
                   <div className='flex items-center gap-7 mt-7'>
                     <button className='px-12 sm:px-20 py-3 rounded-md text-white bg-[#f59134] shadow-md'>Submit</button>
                     <input type='file' id='select_file' hidden />
@@ -124,7 +124,7 @@ const DetailedReporting = () => {
                             <span>Attach a file</span>
                         </div>
                     </label>
-                </div>
+                  </div>
                   </section>
                 </div>
               </div>

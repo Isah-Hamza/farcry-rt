@@ -11,6 +11,7 @@ import Prevention from './pages/Prevention';
 import ContactUs from './pages/ContactUs';
 import Donate from './pages/Donate';
 import FAQ from './pages/FAQ';
+import Support from './pages/Support';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
             <Route path='/report/emergency' element={<Emergency />} />
             <Route path='/report/detailed-reporting' element={<DetailedReporting />} />
             <Route path='/report/faq' element={<FAQ />} />
+            <Route path='/report/support' element={<Support />} />
             <Route path='/prevention' element={<Prevention />} />
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
