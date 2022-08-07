@@ -1,6 +1,3 @@
-import React from 'react'
-
-
 import pexel from '../assets/images/pexels-inna-mikitas-6455239 1.png';
 import news1 from '../assets/images/news1.svg';
 import news2 from '../assets/images/news2.svg';
@@ -12,7 +9,6 @@ import Services from '../components/Services';
 import NewsLetter from '../components/NewsLetter';
 import Footer from '../components/Footer';
 
-
 const Homepage = () => {
   return (
     <main className="pt-5 md:pt-10">
@@ -22,7 +18,7 @@ const Homepage = () => {
                 <p className="text-lg text-center sm:text-left leading-tight mb-7">
                     Those who deny freedom to others deserve it not <br className="hidden lg:block"/> for themselves.
                 </p>
-                <button className=" flex items-center space-x-4 rounded-md px-7 py-3 bg-primaryBlue text-white">
+                <button className="cursor-pointer flex items-center space-x-4 rounded-md px-7 py-3 bg-primaryBlue text-white">
                     <span>
                         Get Support Now
                     </span>
