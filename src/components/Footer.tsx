@@ -4,7 +4,7 @@ import { ImFacebook } from 'react-icons/im'
 
 const Footer = () => {
   return (
-    <footer className="bg-primaryBlue" >
+    <footer className="bg-primaryBlue pl-5 md:14 lg:pl-32" >
         <section className="px-[4.5%] max-w-[1300px] py-10 text-white text-sm ">
             <div className="grid justify-center md:justify-start md:grid-cols-3 mb-14 md:5 space-y-5 md:space-y-0">
                 <div className="flex flex-col space-y-5 order-3 md:order-[unset] mt-5 md:mt-0"> 

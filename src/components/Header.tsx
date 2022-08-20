@@ -1,9 +1,17 @@
-import  { useState, useRef, useEffect} from 'react';
+import  { useState, useRef, useEffect, useContext } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { IoIosMenu, IoMdClose } from 'react-icons/io'
+import { IoIosMenu, IoMdClose } from 'react-icons/io';
+import bell from '../assets/images/bell.png';
+import suleiman from '../assets/images/suleiman.png';
 
+import { UsersContext } from '../contexts/Users';
+import { Dashboard } from '../contexts/Dashboard';
 
-const Header = () => {
+interface HeaderProps{
+    dashboard?: boolean
+}
+
+const Header = ({ dashboard } : HeaderProps) => {
     const location = useLocation();
     const navigate = useNavigate();
     const [ activeLink, setActiveLink] = useState('Home');
@@ -18,11 +26,13 @@ const Header = () => {
             {text:'Support Group', to:'/report/support'},
             {text:'FAQs', to:'/report/faq'},
         ] 
-    },
+        },
         { name:'Prevention', to:'/prevention' },
-        { name:'Contact Us' , to:'contact-us'},
+        { name:'Contact Us' , to:'/contact-us'},
         { name:'Login', to:'/login' },
     ]
+    const { loggedInUser } = useContext(UsersContext);
+    const { isDashboardOpen, setIsDashboardOpen }  = useContext(Dashboard)
 
     const navRef = useRef<HTMLElement | null >(null);
     const subMenuRef = useRef<HTMLDivElement | null >(null);
@@ -33,7 +43,7 @@ const Header = () => {
 
     function handleClick(name:string){
         setActiveLink(name);
-        if(name != 'Report'){
+        if(name !== 'Report'){
             handleToggleSideNav();
         }
     }  
@@ -45,7 +55,7 @@ const Header = () => {
         }else if(path.includes('report')){
             setActiveLink('Report')
         }
-    }, [])
+    }, [location.pathname])
     
     return (
     <header className=" fixed top-0 left-0 shadow-md z-10  px-[5%] sm:px-[6%] bg-primaryBlue w-full">
@@ -82,13 +92,25 @@ const Header = () => {
                             </li>
                         ))
                     }
-                    <li onClick={() => navigate('/donate')}><button className="border border-gold rounded-md px-6 py-2">Donate</button></li>
+                    {JSON.stringify(loggedInUser) === "{}" ?
+                        <li onClick={() => navigate('/donate')}><button className="border border-gold rounded-md px-6 py-2">Donate</button></li>
+                        :
+                        <div className='flex items-center gap-4 ml-10'>
+                            <img className='cursor-pointer' src={bell} alt='bell' />
+                            <img className='w-8 h-8 rounded-full cursor-pointer' src={suleiman} alt='suleiman' />
+                        </div>
+                        }
                     <IoMdClose color='coral' onClick={handleToggleSideNav} className="block lg:hidden absolute !mt-4 right-6 top-1" size={26} />
                 </ul>
             </nav>
-            <div data-menu className="btn block lg:hidden">
+            { !dashboard ? 
+            <div data-menu className="btn block cursor-pointer lg:hidden">
                 <IoIosMenu onClick={handleToggleSideNav} size={30} />
+            </div> : 
+            <div data-menu className="btn block cursor-pointer lg:hidden">
+                <IoIosMenu onClick={() => setIsDashboardOpen((prev:boolean) => !prev) } size={30} />
             </div>
+            }
         </div>
     </header>
   )
