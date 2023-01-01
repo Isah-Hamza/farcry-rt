@@ -21,15 +21,15 @@ export const sidebarList = [
     url: "",
   },
   {
-    title: "case study",
+    title: "case-status",
     icon: (
       <img
         className="w-4 h-4 object-contain"
         src={caseStudy}
-        alt="case study"
+        alt="case-study"
       />
     ),
-    url: "",
+    url: "/case-status",
   },
   {
     title: "messages",
@@ -48,13 +48,6 @@ export const sidebarList = [
     icon: (
       <img className="w-4 h-4 object-contain" src={settings} alt="settings" />
     ),
-  },
-  {
-    title: "support",
-    icon: (
-      <img className="w-4 h-4 object-contain" src={support} alt="support" />
-    ),
-    url: "",
   },
   {
     title: "logout",

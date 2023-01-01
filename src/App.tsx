@@ -17,6 +17,9 @@ import Profile from "./pages/dashboard/Profile";
 import Messages from "./pages/dashboard/Messages";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUsers from "./pages/admin/AdminUsers";
+import AdminPartners from "./pages/admin/AdminPartners";
+import AdminSettings from "./pages/admin/AdminSettings";
+import CaseStatus from "./pages/dashboard/CaseStatus";
 
 function App() {
   return (
@@ -42,9 +45,12 @@ function App() {
                 <Route path="/contact-us" element={<ContactUs />} />
                 <Route path="/donate" element={<Donate />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/case-status" element={<CaseStatus />} />
                 <Route path="/messages" element={<Messages />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 <Route path="/admin/users" element={<AdminUsers />} />
+                <Route path="/admin/partners" element={<AdminPartners />} />
+                <Route path="/admin/settings" element={<AdminSettings />} />
               </Routes>
             </main>
           </Users>

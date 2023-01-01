@@ -18,9 +18,9 @@ export const sidebarList = [
     url: "/admin/users",
   },
   {
-    title: "Partner",
+    title: "Partners",
     icon: <img className="w-4 h-4 object-contain" src={donate} alt="Partner" />,
-    url: "",
+    url: "/admin/partners",
   },
   {
     title: "settings",

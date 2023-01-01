@@ -23,7 +23,7 @@ const AdminDashboard = () => {
       count: 120,
     },
   ];
-  const tableHeader = ["name", "case", "email", "date", "status", "date"];
+  const tableHeader = ["name", "case", "email", "date", "status", "action"];
   const tableData = [
     {
       imgUrl: tableGirl,
