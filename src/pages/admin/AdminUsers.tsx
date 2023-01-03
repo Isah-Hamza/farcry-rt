@@ -230,9 +230,9 @@ const AdminUsers = () => {
                           </p>
                           <p className="mt-1.5">Abuja </p>
                         </div>
-                        <button className="ml-[unset] px-14 mt-10 py-3 rounded bg-primaryBlue text-white w-fit">
+                        {/* <button className="ml-[unset] px-14 mt-10 py-3 rounded bg-primaryBlue text-white w-fit">
                           Assign
-                        </button>
+                        </button> */}
                       </div>
                     </div>
                     <div>

@@ -20,6 +20,9 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminPartners from "./pages/admin/AdminPartners";
 import AdminSettings from "./pages/admin/AdminSettings";
 import CaseStatus from "./pages/dashboard/CaseStatus";
+import Report from "./pages/dashboard/Report";
+import UserDashboardReport from "./pages/dashboard/UserDashboardDonate";
+import Success from "./pages/Success";
 
 function App() {
   return (
@@ -51,6 +54,9 @@ function App() {
                 <Route path="/admin/users" element={<AdminUsers />} />
                 <Route path="/admin/partners" element={<AdminPartners />} />
                 <Route path="/admin/settings" element={<AdminSettings />} />
+                <Route path="/report" element={<Report />} />
+                <Route path="/donation" element={<UserDashboardReport />} />
+                <Route path="/success" element={<Success />} />
               </Routes>
             </main>
           </Users>

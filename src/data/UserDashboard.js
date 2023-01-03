@@ -18,7 +18,7 @@ export const sidebarList = [
   {
     title: "report",
     icon: <img className="w-4 h-4 object-contain" src={report} alt="report" />,
-    url: "",
+    url: "/report",
   },
   {
     title: "case-status",
@@ -39,9 +39,9 @@ export const sidebarList = [
     url: "/messages",
   },
   {
-    title: "Donate",
+    title: "Donation",
     icon: <img className="w-4 h-4 object-contain" src={donate} alt="donate" />,
-    url: "",
+    url: "/donation",
   },
   {
     title: "settings",
