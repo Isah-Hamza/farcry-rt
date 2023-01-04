@@ -23,6 +23,7 @@ import CaseStatus from "./pages/dashboard/CaseStatus";
 import Report from "./pages/dashboard/Report";
 import UserDashboardReport from "./pages/dashboard/UserDashboardDonate";
 import Success from "./pages/Success";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -61,6 +62,7 @@ function App() {
             </main>
           </Users>
         </DashboardContext>
+        <ToastContainer />
       </Router>
     </div>
   );

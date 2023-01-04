@@ -1,10 +1,14 @@
+import { useContext } from "react";
 import Header from "../../components/Header";
-
 import suleiman from "../../assets/images/suleiman.png";
 import DashboardSidebar from "../../components/DashboardSidebar";
 import { sidebarList } from "../../data/UserDashboard";
+import { UsersContext } from "../../contexts/Users";
 
 const Profile = () => {
+  const { loggedInUser, setLoggedInUser } = useContext(UsersContext);
+  //@ts-ignore
+  const { name, phone, location, age, email } = loggedInUser;
   return (
     <div className="flex flex-col h-[calc(100vh-5rem)]">
       <Header dashboard />
@@ -31,7 +35,13 @@ const Profile = () => {
                   <p className="font-semibold opacity-70 text-xl whitespace-nowrap">
                     Name :
                   </p>
-                  <p>Suleiman Abdullahi</p>
+                  <p>{name}</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <p className="font-semibold opacity-70 text-xl whitespace-nowrap">
+                    Email :
+                  </p>
+                  <p>{email}</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <p className="font-semibold opacity-70 text-xl whitespace-nowrap">
@@ -43,7 +53,7 @@ const Profile = () => {
                   <p className="font-semibold opacity-70 text-xl whitespace-nowrap">
                     Age :
                   </p>
-                  <p>30</p>
+                  <p>{age ?? "null"}</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <p className="font-semibold opacity-70 text-xl whitespace-nowrap">
@@ -61,9 +71,7 @@ const Profile = () => {
                   <p className="font-semibold opacity-70 text-lg whitespace-nowrap">
                     Address :
                   </p>
-                  <p className="mt-1.5">
-                    Off 143, Avenue, Number 443 Syd cresent.
-                  </p>
+                  <p className="mt-1.5">{location}</p>
                 </div>
                 <button className="ml-[unset] px-20 mt-10 py-3 rounded bg-primaryBlue text-white w-fit">
                   Edit
