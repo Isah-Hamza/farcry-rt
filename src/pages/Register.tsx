@@ -4,9 +4,10 @@ import google from "../assets/images/google.png";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Register as register } from "../services/auth";
 import { toast } from "react-toastify";
 import { ImSpinner2 } from "react-icons/im";
+import axios from "axios";
+import { apiEndpoints, BASE_URL } from "../config/Endpoints";
 
 interface InputProps {
   label?: string;
@@ -43,10 +44,6 @@ const Register = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const options = {
-    theme: "colored"
-  };
-
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name field is required"),
     phone: Yup.string().required("Phone Number is required"),
@@ -72,7 +69,8 @@ const Register = () => {
     validationSchema,
     onSubmit(values) {
       setLoading(true);
-      register(values)
+      axios
+        .post(`${BASE_URL}/${apiEndpoints.REGISTER}`, values)
         .then((res) => {
           toast.success("User registration successfull", { theme: "colored" });
           navigate("/login");

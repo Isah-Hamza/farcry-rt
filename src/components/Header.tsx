@@ -15,6 +15,13 @@ const Header = ({ dashboard }: HeaderProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [activeLink, setActiveLink] = useState("Home");
+
+  const { loggedInUser, setLoggedInUser } = useContext(UsersContext);
+  const { isDashboardOpen, setIsDashboardOpen } = useContext(Dashboard);
+
+  const navRef = useRef<HTMLElement | null>(null);
+  const subMenuRef = useRef<HTMLDivElement | null>(null);
+
   const links = [
     { name: "Home", to: "/" },
     { name: "Services", to: "/services" },
@@ -25,18 +32,19 @@ const Header = ({ dashboard }: HeaderProps) => {
         { text: "Emergency", to: "/report/emergency" },
         { text: "Detailed Reporting", to: "/report/detailed-reporting" },
         { text: "Support Group", to: "/report/support" },
-        { text: "FAQs", to: "/report/faq" },
-      ],
+        { text: "FAQs", to: "/report/faq" }
+      ]
     },
     { name: "Prevention", to: "/prevention" },
     { name: "Contact Us", to: "/contact-us" },
-    { name: "Login", to: "/login" },
+    {
+      name: JSON.stringify(loggedInUser) === "{}" ? "Login" : "Logout",
+      to: JSON.stringify(loggedInUser) === "{}" ? "/login" : "#",
+      onClick: (e: Event) => {
+        e.preventDefault();
+      }
+    }
   ];
-  const { loggedInUser } = useContext(UsersContext);
-  const { isDashboardOpen, setIsDashboardOpen } = useContext(Dashboard);
-
-  const navRef = useRef<HTMLElement | null>(null);
-  const subMenuRef = useRef<HTMLDivElement | null>(null);
 
   function handleToggleSideNav() {
     navRef.current?.classList.toggle("open");
@@ -44,12 +52,13 @@ const Header = ({ dashboard }: HeaderProps) => {
 
   function handleClick(name: string) {
     if (name === "Report") return;
+    if (name === "Logout") {
+      setLoggedInUser({});
+      navigate("/");
+      return;
+    }
     setActiveLink(name);
     navRef.current?.classList.remove("open");
-
-    // if (name !== "Report") {
-    //   handleToggleSideNav();
-    // }
   }
 
   useEffect(() => {

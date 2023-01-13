@@ -1,12 +1,60 @@
 import Footer from "../components/Footer";
 
 import contactUs from "../assets/images/contact-us.png";
-import { ImFacebook } from "react-icons/im";
+import { ImFacebook, ImSpinner2 } from "react-icons/im";
 import { FaTwitter } from "react-icons/fa";
 import { FiInstagram } from "react-icons/fi";
 import NewsLetter from "../components/NewsLetter";
+import { FormEvent, useRef } from "react";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import * as Yup from "yup";
+
+import emailJs from "@emailjs/browser";
+import { useFormik, validateYupSchema } from "formik";
+import { Error } from "./Emergency";
 
 const ContactUs = () => {
+  const formRef = useRef<HTMLElement>(null);
+  const serviceId = "service_vap4zkv";
+  const templateId = "template_qgzzj7s";
+  const publicKey = "jBKmQQoinQiDr4P_i";
+  const [loading, setLoading] = useState(false);
+
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required("Name field is required"),
+    email: Yup.string().required("Eamil field is required"),
+    message: Yup.string().required("Message field is required")
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      message: ""
+    },
+    validationSchema,
+    onSubmit() {
+      sendMail();
+      formik.resetForm();
+    }
+  });
+
+  const sendMail = (e?: FormEvent) => {
+    if (e) e.preventDefault();
+    setLoading(true);
+    emailJs
+      //@ts-ignore
+      .sendForm(serviceId, templateId, formRef.current, publicKey)
+      .then((res) => {
+        toast.success("Message sent successful", { theme: "colored" });
+      })
+      .catch((err) => {
+        toast.error("Message not sent " + err.message, { theme: "colored" });
+      })
+      .finally(() => setLoading(false));
+  };
+
   return (
     <>
       <div className="w-full relative">
@@ -65,41 +113,79 @@ const ContactUs = () => {
             </div>
           </div>
         </div>
-        <div className="bg-[#D7D7DF] bg-opacity-70 px-5 md:px-10 p-10 ">
+        <form
+          // @ts-ignore
+          ref={formRef}
+          onSubmit={formik.handleSubmit}
+          className="bg-[#D7D7DF] bg-opacity-70 px-5 md:px-10 p-10 flex flex-col gap-3"
+        >
           <p className="font-bold text-2xl mb-10">Get in Touch </p>
-          <div className="flex items-end gap-3 mb-10 border-b border-b-black pb-2 mt-3">
-            <label className="text-sm font-medium" htmlFor="name">
-              Name:
-            </label>
-            <input
-              className="bg-transparent w-full outline-none border-none pl-4"
-              type="text"
-              placeholder="Your fullname, lastname first"
-            />
+          <div>
+            <div className="flex items-end gap-3 mb-10 border-b border-b-black pb-2 mt-3">
+              <label className="text-sm font-medium" htmlFor="name">
+                Name:
+              </label>
+              <input
+                {...formik.getFieldProps("name")}
+                className="bg-transparent w-full outline-none border-none pl-4"
+                type="text"
+                placeholder="Your fullname, lastname first"
+              />
+            </div>
+            <div className="-mt-10">
+              {formik.touched.name && formik.errors.name && (
+                <Error text={formik.errors.name} />
+              )}
+            </div>
           </div>
-          <div className="flex items-end gap-3 mb-10 border-b border-b-black pb-2 mt-3">
-            <label className="text-sm font-medium" htmlFor="email">
-              Email:
-            </label>
-            <input
-              className="bg-transparent w-full outline-none border-none pl-4"
-              type="email"
-              placeholder="Your email here"
-            />
+          <div>
+            <div className="flex items-end gap-3 mb-10 border-b border-b-black pb-2 mt-3">
+              <label className="text-sm font-medium" htmlFor="email">
+                Email:
+              </label>
+              <input
+                {...formik.getFieldProps("email")}
+                className="bg-transparent w-full outline-none border-none pl-4"
+                type="email"
+                name="email"
+                placeholder="Your email here"
+              />
+            </div>
+            <div className="-mt-10">
+              {formik.touched.email && formik.errors.email && (
+                <Error text={formik.errors.email} />
+              )}
+            </div>
           </div>
-          <div className="">
-            <label className="font-medium mb-2" htmlFor="message">
-              Message
-            </label>
-            <textarea
-              className="mt-1 resize-none shadow-md w-full outline-none border-none text-sm p-4 h-32 bg-white"
-              placeholder="Type in your message here..."
-            />
+          <div className="mt-3">
+            <div className="">
+              <label className="font-medium mb-2" htmlFor="message">
+                Message
+              </label>
+              <textarea
+                {...formik.getFieldProps("message")}
+                className="mt-1 resize-none shadow-md w-full outline-none border-none text-sm p-4 h-32 bg-white"
+                placeholder="Type in your message here..."
+              />
+            </div>
+            <div className="-mt-1">
+              {formik.touched.message && formik.errors.message && (
+                <Error text={formik.errors.message} />
+              )}
+            </div>
           </div>
-          <button className="hover:shadow-inner mt-10 px-12 sm:px-16 py-3 rounded-md text-white bg-[#f59134] shadow-xl">
-            Submit
+          <button
+            disabled={loading}
+            type="submit"
+            className=" disabled:bg-opacity-50 hover:shadow-inner mt-10 px-12 sm:px-16 py-3 rounded-md text-white bg-[#f59134] shadow-xl"
+          >
+            {loading ? (
+              <ImSpinner2 className="animate-spin mx-auto" size={22} />
+            ) : (
+              "Submit"
+            )}
           </button>
-        </div>
+        </form>
       </section>
       <NewsLetter />
       <Footer />

@@ -3,6 +3,12 @@ import { MdOutlineAttachment } from "react-icons/md";
 import Footer from "../components/Footer";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import { useState } from "react";
+import { ImSpinner2 } from "react-icons/im";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { apiEndpoints, BASE_URL } from "../config/Endpoints";
+import { useNavigate } from "react-router-dom";
 
 interface CustomInputProps {
   type?: "text" | "password";
@@ -14,14 +20,14 @@ interface ErrorProps {
   text: string;
 }
 
-const CustomInput = ({
+export const CustomInput = ({
   type,
   label,
   placeholder,
   ...rest
 }: CustomInputProps) => {
   return (
-    <div className="flex items-end gap-3 border-b border-b-black pb-2 mt-5">
+    <div className="flex items-end gap-3 border-b border-b-black pb-2">
       <label className="text-sm font-medium" htmlFor="name">
         {label}
       </label>
@@ -35,12 +41,23 @@ const CustomInput = ({
   );
 };
 
-const Error = ({ text }: ErrorProps) => (
+export const Error = ({ text }: ErrorProps) => (
   <span className="text-[coral] text-xs">{text}</span>
 );
 
 const Emergency = () => {
-  const validationSchema = Yup.object().shape({});
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required("Please enter your name"),
+    email: Yup.string()
+      .required("Please enter your email")
+      .email("Invalid email format."),
+    phone: Yup.string().required("Please enter your phone number"),
+    location: Yup.string().required("Please enter your location address"),
+    gender: Yup.string().required("Please select one"),
+    message: Yup.string().required("The message field can't be empty")
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -48,14 +65,42 @@ const Emergency = () => {
       phone: "",
       location: "",
       email: "",
-      gender: "",
+      gender: "male",
       message: ""
     },
     validationSchema,
     onSubmit(values) {
-      console.log(values);
+      const data = {
+        reporting_type: "emergency",
+        name_reporter: values.name,
+        email_reporter: values.email,
+        phone_reporter: values.phone,
+        address_reporter: values.location,
+        gender: values.gender,
+        message: values.message
+      };
+      console.log(data);
+      makeReport(data);
     }
   });
+
+  const handleChange = (e: Event) => {
+    //@ts-ignore
+    formik.setFieldValue("gender", e.target?.value);
+  };
+
+  async function makeReport(data: Object) {
+    setLoading(true);
+    try {
+      await axios
+        .post(`${BASE_URL}/${apiEndpoints.REPORT}`, data)
+        .then(() => navigate("/success"));
+    } catch (error) {
+      toast.error("Problem submitting report. Please try again");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <>
@@ -118,11 +163,14 @@ const Emergency = () => {
             </div>
             <div className="flex items-center gap-2">
               <p className="font-medium mr-5">Gender:</p>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 mr-3">
                 <input
                   type="radio"
                   id="male"
-                  {...formik.getFieldProps("gender")}
+                  value="male"
+                  name="gender"
+                  //@ts-ignore
+                  onChange={(e) => handleChange(e)}
                 />
                 <label htmlFor="male">Male</label>
               </div>
@@ -130,10 +178,18 @@ const Emergency = () => {
                 <input
                   type="radio"
                   id="female"
-                  {...formik.getFieldProps("gender")}
+                  value={"female"}
+                  name="gender"
+                  //@ts-ignore
+                  onChange={(e) => handleChange(e)}
+
+                  // {...formik.getFieldProps("gender")}
                 />
                 <label htmlFor="female">Female</label>
               </div>
+              {formik.touched.gender && formik.errors.gender && (
+                <Error text={formik.errors.gender} />
+              )}
             </div>
             <div className="">
               <label className="font-medium mb-2" htmlFor="message">
@@ -144,13 +200,21 @@ const Emergency = () => {
                 placeholder="Briefly tell us what is happening..."
                 {...formik.getFieldProps("message")}
               />
+              {formik.touched.message && formik.errors.message && (
+                <Error text={formik.errors.message} />
+              )}
             </div>
             <div className="flex items-center gap-7">
               <button
+                disabled={loading}
                 type="submit"
-                className="px-12 sm:px-16 py-3 rounded-md text-white bg-[#f59134] shadow-md"
+                className="disabled:bg-opacity-50 px-12 sm:px-16 py-3 rounded-md text-white bg-[#f59134] shadow-md"
               >
-                Submit
+                {loading ? (
+                  <ImSpinner2 size={22} className="mx-auto animate-spin" />
+                ) : (
+                  "Submit"
+                )}
               </button>
               <input type="file" id="select_file" hidden />
               <label

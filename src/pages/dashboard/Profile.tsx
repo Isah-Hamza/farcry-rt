@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import Header from "../../components/Header";
 import suleiman from "../../assets/images/suleiman.png";
 import DashboardSidebar from "../../components/DashboardSidebar";
@@ -9,6 +9,9 @@ const Profile = () => {
   const { loggedInUser, setLoggedInUser } = useContext(UsersContext);
   //@ts-ignore
   const { name, phone, location, age, email } = loggedInUser;
+
+  const [editInfo, setEditInfo] = useState(false);
+
   return (
     <div className="flex flex-col h-[calc(100vh-5rem)]">
       <Header dashboard />
@@ -35,19 +38,44 @@ const Profile = () => {
                   <p className="font-semibold opacity-70 text-xl whitespace-nowrap">
                     Name :
                   </p>
-                  <p>{name}</p>
+                  {editInfo ? (
+                    <input
+                      className="border outline-none border-blue-400 text-sm bg-transparent p-2 rounded"
+                      type={"text"}
+                      placeholder="name"
+                      defaultValue={name}
+                    />
+                  ) : (
+                    <p>{name}</p>
+                  )}
                 </div>
                 <div className="flex items-center gap-3">
                   <p className="font-semibold opacity-70 text-xl whitespace-nowrap">
                     Email :
                   </p>
-                  <p>{email}</p>
+                  {editInfo ? (
+                    <input
+                      className="border outline-none border-blue-400 text-sm bg-transparent p-2 rounded"
+                      type={"email"}
+                      placeholder="email"
+                      defaultValue={email}
+                    />
+                  ) : (
+                    <p>{email}</p>
+                  )}
                 </div>
                 <div className="flex items-center gap-3">
                   <p className="font-semibold opacity-70 text-xl whitespace-nowrap">
                     Sex :
                   </p>
-                  <p>Male</p>
+                  {editInfo ? (
+                    <select className="border outline-none border-blue-400 text-sm bg-transparent p-2 rounded">
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </select>
+                  ) : (
+                    <p>Male</p>
+                  )}
                 </div>
                 <div className="flex items-center gap-3">
                   <p className="font-semibold opacity-70 text-xl whitespace-nowrap">
@@ -73,9 +101,21 @@ const Profile = () => {
                   </p>
                   <p className="mt-1.5">{location}</p>
                 </div>
-                <button className="ml-[unset] px-20 mt-10 py-3 rounded bg-primaryBlue text-white w-fit">
-                  Edit
-                </button>
+                {!editInfo ? (
+                  <button
+                    onClick={() => setEditInfo(true)}
+                    className="ml-[unset] px-20 mt-10 py-3 rounded bg-primaryBlue text-white w-fit"
+                  >
+                    Edit
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setEditInfo(false)}
+                    className="ml-[unset] px-20 mt-10 py-3 rounded bg-primaryBlue text-white w-fit"
+                  >
+                    Save
+                  </button>
+                )}
               </div>
             </div>
           </div>
