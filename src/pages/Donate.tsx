@@ -15,23 +15,29 @@ const Donate = () => {
   const [fname, setfName] = useState("");
   const [lname, setlName] = useState("");
   const [email, setEmail] = useState("");
-  const [activePrice, setActivePrice] = useState("300");
-  const [otherPrice, setOtherPrice] = useState("200");
+  const [activePrice, setActivePrice] = useState(300);
+  const [otherPrice, setOtherPrice] = useState(200);
   const [proceedToPayment, setProceedToPayment] = useState(false);
 
-  const prices = ["10,000", "500", "1,000", "100", "300", "5,000"];
+  const prices = [10000, 500, 1000, 100, 300, 5000];
 
   const handleIncrease = (): void => {
     let number = +otherPrice;
     number++;
-    setOtherPrice(`${number}`);
+    setOtherPrice(number);
+    setActivePrice(number);
   };
 
   const handleReduce = (): void => {
     let number = +otherPrice;
     number--;
-    setOtherPrice(`${number}`);
+    setOtherPrice(number);
+    setActivePrice(number);
   };
+
+  function formatNumber(number: Number) {
+    return `$${number.toLocaleString("en-En")}`;
+  }
 
   useEffect(() => {
     console.log(activePrice);
@@ -83,7 +89,7 @@ const Donate = () => {
                   } bg-[#f5f6fa] relative flex justify-center items-center py-3 px-5 cursor-pointer rounded-md shadow-md`}
                   key={idx}
                 >
-                  <p className="font-semibold">{`$${price}`}</p>
+                  <p className="font-semibold">{formatNumber(price)}</p>
                   {activePrice === price && (
                     <div className="absolute top-1 right-1 w-4 h-4 shadow-lg bg-white rounded-full flex justify-center items-center">
                       <img src={orangeMark} alt="check mark" />
@@ -126,6 +132,20 @@ const Donate = () => {
                     Address:
                   </span>{" "}
                   Suleimsnsyd cresent 243 avenue
+                </p>
+                <p>
+                  {" "}
+                  <span className="font-semibold tracking-wider">
+                    Account No:
+                  </span>{" "}
+                  0123456789
+                </p>
+                <p>
+                  {" "}
+                  <span className="font-semibold tracking-wider">
+                    Bank:
+                  </span>{" "}
+                  First Bank
                 </p>
               </div>
             </div>
@@ -206,7 +226,7 @@ const Donate = () => {
               type="submit"
               className="w-full mt-3 text-white font-medium tracking-wider bg-primaryBlue py-3 text-center"
             >
-              Donate <span>$300.00</span>
+              Donate <span>{formatNumber(activePrice)}</span>
             </button>
           </form>
         </section>

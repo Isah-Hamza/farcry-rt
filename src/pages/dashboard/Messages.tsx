@@ -103,6 +103,7 @@ const Messages = () => {
       .post(`${BASE_URL}/${apiEndpoints.MESSAGE}`, message)
       .then(() => {
         toast.success("Message sent successfully", { theme: "colored" });
+        setActiveHeaderItem('sent');
         getMessages();
       })
       .catch(() => toast.error("Error sending message", { theme: "colored" }))

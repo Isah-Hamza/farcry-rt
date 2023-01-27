@@ -30,10 +30,10 @@ const Login = () => {
         //   JSON.stringify(res?.data?.user)
         // );
         setLoggedInUser(res?.data?.user);
-        navigate("/profile");
+        navigate("/case-status");
       })
       .catch((err) => {
-        toast.error("Invalid username or passwrod", { theme: "colored" });
+        toast.error("Invalid username or password", { theme: "colored" });
       })
       .finally(() => setLoading(false));
   }

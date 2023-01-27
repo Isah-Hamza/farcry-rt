@@ -1,76 +1,106 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DashboardSidebar from "../../components/DashboardSidebar";
 import Header from "../../components/Header";
 import { sidebarList } from "../../data/AdminDashboard";
 
-import tableGirl from "../../assets/images/table-girl.png";
 import filter from "../../assets/images/Filter 1.png";
 import previous from "../../assets/images/icon-previous.svg";
 import next from "../../assets/images/icon-next.svg";
 import { FiArrowLeft } from "react-icons/fi";
-import { AiOutlineCaretDown, AiOutlineCloudDownload } from "react-icons/ai";
 import girl from "../../assets/images/table-girl.png";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { apiEndpoints, BASE_URL } from "../../config/Endpoints";
+import empty from "../../assets/images/no-data.png";
+import moment from "moment";
+
+import { trim as trimText } from "../admin/AdminDashboard";
+import SelectedSupport from "../../components/SelectedSupport";
+import { ISupport, IUser } from "../../extra/types";
+
+export interface IEmpty {
+  content?: string;
+}
+
+const Empty = ({ content }: IEmpty) => (
+  <div className="py-5 mt-3 flex flex-col justify-center text-center">
+    <img className="mx-auto w-24" src={empty} alt="no data" />
+    <p className="ml-8">{content ?? "No cases here."}</p>{" "}
+  </div>
+);
 
 const AdminUsers = () => {
+  const [partners, setPartners] = useState([]);
   const [showUserDetails, setShowUserDetails] = useState(false);
   const [showSupportDetails, setShowSupportDetails] = useState(false);
-  const [showStatus, setShowStatus] = useState(false);
   const caseTableHeader = ["case", "date", "status", "action"];
   const tableHeader = ["Name", "Phone", "Email", "Action"];
-  const requestStatus = ["pending", "completed", "Inconclusive"];
+  const [selectedUser, setSelectedUser] = useState({} as IUser);
+  const [selectedSupport, setSelectedSupport] = useState({} as ISupport);
+  const [userSupport, setUserSupport] = useState(
+    {} as {
+      analytics: { allCount: number; completedCount: number };
+      supports: Array<ISupport>;
+    }
+  );
 
-  const tableData = [
-    {
-      imgUrl: tableGirl,
-      name: "John Doe",
-      phone: "09012345678",
-      email: "Bipasu@gmail.com",
-    },
-    {
-      imgUrl: tableGirl,
-      name: "Wonder Woman",
-      phone: "09012345678",
-      email: "wonder@woman.com",
-    },
-    {
-      imgUrl: tableGirl,
-      name: "Bruce Wayne",
-      phone: "09012345678",
-      email: "bruce@wayne.com",
-    },
-    {
-      imgUrl: tableGirl,
-      name: "John Doe",
-      phone: "09012345678",
-      email: "john@doe.com",
-    },
-  ];
-  const caseTableBody = [
-    {
-      case: "elkirk College has eight campuses and learning centres across the West Kootenay and Kootenay Boundary regions:",
-      date: "20/12/2020",
-      status: "pending",
-    },
-    {
-      case: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Officiis sunt a deserunt reprehenderit, totam magni quisquam ipsum nemo beatae, accusamus nam nulla ab accusantium soluta eos tenetur modi. Ad, inventore?",
-      date: "20/12/2020",
-      status: "completed",
-    },
-  ];
+  const [pageIndex, setPageIndex] = useState(1);
+  const itemCount = 5;
 
-  const resolvedCases = [
-    "elkirk College has eight campuses and learning centres across the West Kootenay and Kootenay Boundary regions:",
-  ];
+  const [allUsers, setAllUsers] = useState([] as Array<IUser>);
 
-  const handleShowUserDetails = () => {
+  const resolvedCases = () => {
+    return userSupport.supports.filter(
+      (item) => item.status.toLowerCase() === "completed"
+    );
+  };
+
+  const handleShowUserDetails = (user: IUser) => {
+    fetchUserDetails(user.email);
+    setSelectedUser(user);
     setShowUserDetails(!showUserDetails);
   };
 
-  const handleShowSuppportDetails = () => {
+  const handleShowSuppportDetails = (item?: ISupport) => {
     setShowSupportDetails(!showSupportDetails);
+    if (item) setSelectedSupport(item);
   };
 
-  const handleShowStatus = () => setShowStatus(!showStatus);
+  async function fetchUsers() {
+    try {
+      const res = await axios.get(`${BASE_URL}/${apiEndpoints.USERS}`);
+      setAllUsers(res.data.data);
+    } catch (error) {
+      toast.error("Error fetching users from database", { theme: "colored" });
+    }
+  }
+
+  async function fetchUserDetails(email: string) {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}/${apiEndpoints.SUPPORT}/${email}`
+      );
+      setUserSupport(res?.data?.data);
+    } catch (error) {
+      toast.error("Error fetcing user support details", { theme: "colored" });
+    }
+  }
+
+  function getInRangeItems(array: Array<IUser>) {
+    const lowerLimit = (pageIndex - 1) * itemCount;
+    const upperLimit = itemCount * pageIndex;
+    const res = array.filter((_, idx) => idx >= lowerLimit && idx < upperLimit);
+    return res;
+  }
+
+  function getButtomPagination() {
+    const number = Math.ceil(allUsers?.length / itemCount);
+    return number;
+  }
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   return (
     <div className="flex flex-col h-[calc(100vh-5rem)] overflow-y-auto">
@@ -107,14 +137,14 @@ const AdminUsers = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {tableData.map((item, idx) => (
+                    {getInRangeItems(allUsers)?.map((item, idx) => (
                       <tr key={idx} className="text-sm">
                         <td className="pt-4">
                           <div className="flex items-center gap-2">
                             <img
                               className="rounded-full w-7"
-                              src={item.imgUrl}
-                              alt="user"
+                              src={item.imgUrl ?? girl}
+                              alt={item?.name}
                             />
                             <p className="font-semibold">{item.name}</p>
                           </div>
@@ -123,7 +153,7 @@ const AdminUsers = () => {
                         <td className="pt-4">{item.email}</td>
                         <td className="pt-4">
                           <button
-                            onClick={() => handleShowUserDetails()}
+                            onClick={() => handleShowUserDetails(item)}
                             className="text-xs  rounded px-5 py-1.5 text-white capitalize font-semibold w-fit bg-blue-500"
                           >
                             View
@@ -136,27 +166,48 @@ const AdminUsers = () => {
               </div>
               <div className="flex justify-between pt-4 mt-auto mb-3 border-t">
                 <p className="text-sm">
-                  Showing <span className="font-semibold">1</span> to{" "}
-                  <span className="font-semibold"> 10 </span> of{" "}
-                  <span className="font-semibold"> 50 </span>
+                  Showing{" "}
+                  <span className="font-semibold">
+                    {allUsers?.length ? itemCount * (pageIndex - 1) + 1 : "0"}
+                  </span>{" "}
+                  to{" "}
+                  <span className="font-semibold">
+                    {" "}
+                    {allUsers?.length ? itemCount * pageIndex : 0}{" "}
+                  </span>{" "}
+                  of{" "}
+                  <span className="font-semibold">
+                    {" "}
+                    {allUsers?.length || 0}{" "}
+                  </span>
                   Entries
                 </p>
-                <div className="flex items-center gap-3 text-xs">
-                  <img
-                    role={"button"}
-                    className="w-2.5"
-                    src={previous}
-                    alt="previous"
-                  />
-                  <p className="text-white rounded px-2 py-1 bg-blue-500">1</p>
-                  <p className="text-white rounded px-2 py-1 bg-blue-500">2</p>
-                  <p className="text-white rounded px-2 py-1 bg-blue-500">3</p>
-                  <img
-                    role={"button"}
-                    className="w-2.5"
-                    src={next}
-                    alt="next"
-                  />
+                <div className="flex items-center gap-2 text-xs">
+                  <button
+                    className="disabled:opacity-50"
+                    onClick={() => setPageIndex((prev) => prev - 1)}
+                    disabled={pageIndex === 1}
+                  >
+                    <img className="w-2.5 mr-2" src={previous} alt="previous" />
+                  </button>
+                  {[...Array(getButtomPagination())].map((_, idx) => (
+                    <p
+                      onClick={() => setPageIndex(idx + 1)}
+                      role={"button"}
+                      className={`cusor-pointer text-white rounded px-2 py-1 bg-blue-500 ${
+                        pageIndex === idx + 1 && "scale-[1.25] font-semibold"
+                      }`}
+                    >
+                      {idx + 1}
+                    </p>
+                  ))}
+                  <button
+                    className="disabled:opacity-50 "
+                    disabled={pageIndex * itemCount >= allUsers?.length}
+                    onClick={() => setPageIndex((prev) => prev + 1)}
+                  >
+                    <img className="w-2.5 ml-2" src={next} alt="next" />
+                  </button>
                 </div>
               </div>
             </div>
@@ -166,7 +217,7 @@ const AdminUsers = () => {
                 <div className="flex flex-col">
                   <div className="border-b">
                     <button
-                      onClick={handleShowUserDetails}
+                      onClick={() => setShowUserDetails(false)}
                       className="flex items-center gap-2 py-3 px-2"
                     >
                       <FiArrowLeft />
@@ -190,45 +241,47 @@ const AdminUsers = () => {
                       <div className="flex flex-col gap-2 text-sm">
                         <div className=" flex items-center gap-2">
                           <p className="text-xl font-semibold opacity-70 whitespace-nowrap">
-                            Bipasha Basu
+                            {selectedUser?.name}
                           </p>
                         </div>
                         <div className="flex items-center gap-3">
                           <p className="font-semibold opacity-70 text-base whitespace-nowrap">
                             Sex :
                           </p>
-                          <p>Female</p>
+                          <p>{selectedUser?.gender ?? "null"}</p>
                         </div>
                         <div className="flex items-center gap-3">
                           <p className="font-semibold opacity-70 text-base whitespace-nowrap">
                             Age :
                           </p>
-                          <p>30</p>
+                          <p>{selectedUser?.age ?? "null"}</p>
                         </div>
-                        <p>suleiman.khan@schalarshipiq.com</p>
+                        <p>{selectedUser?.email ?? "null"}</p>
                         <div className="flex items-center gap-3">
                           <p className="font-semibold opacity-70 text-base whitespace-nowrap">
                             Occupation :
                           </p>
-                          <p>Salesperson</p>
+                          <p>{selectedUser?.occupation ?? "null"}</p>
                         </div>
                         <div className="flex items-center gap-3">
                           <p className="font-semibold opacity-70 text-base whitespace-nowrap">
                             Phone :
                           </p>
-                          <p>090300736532</p>
+                          <p>{selectedUser?.phone ?? "null"}</p>
                         </div>
                         <div className="flex items-center gap-3">
                           <p className="font-semibold opacity-70 text-base whitespace-nowrap">
                             Marital Status :
                           </p>
-                          <p>Single</p>
+                          <p>{selectedUser?.marital_status ?? "null"}</p>
                         </div>
-                        <div className="flex items-start sm:items-center gap-3">
+                        <div className="flex items-start gap-3">
                           <p className="font-semibold opacity-70 text-lg whitespace-nowrap">
                             State :
                           </p>
-                          <p className="mt-1.5">Abuja </p>
+                          <p className="mt-1.5">
+                            {selectedUser?.location ?? "null"}{" "}
+                          </p>
                         </div>
                         {/* <button className="ml-[unset] px-14 mt-10 py-3 rounded bg-primaryBlue text-white w-fit">
                           Assign
@@ -238,7 +291,8 @@ const AdminUsers = () => {
                     <div>
                       <div>
                         <p className="font-bold">
-                          Submitted Case <span>(2)</span>
+                          Submitted Case{" "}
+                          <span>({userSupport?.analytics?.allCount})</span>
                         </p>
                         <div className="mt-5">
                           <table className="w-full">
@@ -254,143 +308,83 @@ const AdminUsers = () => {
                                 ))}
                               </tr>
                             </thead>
-                            <tbody>
-                              {caseTableBody.map((item, idx) => (
-                                <tr key={idx} className="text-sm">
-                                  <td className="pt-4">
-                                    {item.case.substring(0, 20)}
-                                  </td>
-                                  <td className="pt-4">{item.date}</td>
-                                  <td className="pt-4 pr-3">
-                                    <button
-                                      onClick={() => handleShowUserDetails()}
-                                      className="text-xs w-full rounded px-5 py-1.5 text-white capitalize font-semibold bg-blue-500"
-                                    >
-                                      {item.status}
-                                    </button>
-                                  </td>
-                                  <td className="pt-4 ">
-                                    <div className="flex items-center gap-2">
+                            {userSupport?.analytics?.allCount ? (
+                              <tbody>
+                                {userSupport?.supports?.map((item, idx) => (
+                                  <tr key={idx} className="text-sm">
+                                    <td className="pt-4">
+                                      {trimText(item.message)}
+                                    </td>
+                                    <td className="pt-4">
+                                      {moment(item.createdAt).format("l") ??
+                                        "09-09-2019"}
+                                    </td>
+                                    <td className="pt-4 pr-3">
                                       <button
-                                        onClick={() => {}}
-                                        className="text-xs  rounded px-5 py-1.5 text-white capitalize font-semibold w-fit bg-[coral]"
+                                        // onClick={() => handleShowUserDetails()}
+                                        className="text-xs w-full rounded px-5 py-1.5 text-white capitalize font-semibold bg-blue-500"
                                       >
-                                        Assign
+                                        {item.status}
                                       </button>
-                                      <button
-                                        onClick={() =>
-                                          handleShowSuppportDetails()
-                                        }
-                                        className="text-xs  rounded px-5 py-1.5 text-white capitalize font-semibold w-fit bg-blue-500"
-                                      >
-                                        View
-                                      </button>
-                                    </div>
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
+                                    </td>
+                                    <td className="pt-4 ">
+                                      <div className="flex items-center gap-2">
+                                        <button
+                                          onClick={() => {}}
+                                          className="text-xs  rounded px-5 py-1.5 text-white capitalize font-semibold w-fit bg-[coral]"
+                                        >
+                                          Assign
+                                        </button>
+                                        <button
+                                          onClick={() =>
+                                            handleShowSuppportDetails(item)
+                                          }
+                                          className="text-xs  rounded px-5 py-1.5 text-white capitalize font-semibold w-fit bg-blue-500"
+                                        >
+                                          View
+                                        </button>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            ) : null}
                           </table>
+                          {userSupport?.analytics?.allCount ? null : <Empty />}
                         </div>
                       </div>
                       <div className="mt-10">
                         <p className="font-bold">Resolved Cases</p>
-                        <div className="mt-3">
-                          {resolvedCases.map((item, idx) => (
-                            <div
-                              key={idx}
-                              className="text-sm grid grid-cols-[.7fr,.3fr] gap-3"
-                            >
-                              <p className="">{item}</p>
-                              <button className="px-4 py-2 h-fit w-fit text-white bg-primaryBlue rounded">
-                                View details
-                              </button>
-                            </div>
-                          ))}
-                        </div>
+                        {userSupport?.analytics?.completedCount ? (
+                          <div className="mt-3">
+                            {resolvedCases().map((item, idx) => (
+                              <div
+                                key={idx}
+                                className="mb-4 text-sm grid grid-cols-[.7fr,.3fr] gap-3"
+                              >
+                                <p className="">{item.message}</p>
+                                <button className="px-4 py-2 h-fit w-fit text-white bg-primaryBlue rounded">
+                                  View details
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="">
+                            <Empty content="no resolved cases yet." />
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="flex flex-col">
-                  <div className="border-b pb-3 flex items-center justify-between">
-                    <button
-                      onClick={handleShowSuppportDetails}
-                      className="flex items-center gap-2 py-3 px-2"
-                    >
-                      <FiArrowLeft />
-                      <span className="text-base opacity-90 font-semibold">
-                        /Bipasha/Request details
-                      </span>
-                    </button>
-                    <button
-                      onClick={handleShowStatus}
-                      className="relative flex items-center gap-2 bg-blue-500 px-4 py-2 rounded text-white text-xs"
-                    >
-                      Change Request Status <AiOutlineCaretDown />{" "}
-                      {showStatus && (
-                        <div className="overflow-hidden w-full bg-blue-500 z-10 absolute top-10 left-0 rounded grid">
-                          {requestStatus.map((status, idx) => (
-                            <p
-                              className="px-5 py-2.5 hover:bg-blue-700 text-left capitalize"
-                              key={idx}
-                            >
-                              {status}
-                            </p>
-                          ))}
-                        </div>
-                      )}
-                    </button>
-                  </div>
-                  <div className="max-w-3xl">
-                    <div className="mt-7 flex items-center justify-between">
-                      <p className="text-lg font-semibold">
-                        Showing information for suppor request
-                      </p>
-                      <div className="flex items-center gap-3">
-                        <button
-                          onClick={() => {}}
-                          className="text-xs w-full rounded px-5 py-1.5 text-white capitalize font-semibold bg-[coral]"
-                        >
-                          Pending
-                        </button>{" "}
-                        <button
-                          onClick={() => {}}
-                          className="text-xs w-full rounded px-5 py-1.5 text-white capitalize font-semibold bg-blue-500"
-                        >
-                          Assign
-                        </button>
-                      </div>
-                    </div>
-                    <div className="grid gap-10 grid-cols-[.8fr,.2fr] shadow p-5 rounded mt-5 items-start">
-                      <div>
-                        <p className="font-semibold mb-2">About Request</p>
-                        <p className="text-sm">
-                          elkirk College has eight campuses and learning centres
-                          across the West Kootenay and Kootenay Boundary
-                          regions: elkirk College has eight campuses and
-                          learning centres across the West Kootenay and Kootenay
-                          Boundary regions:
-                        </p>
-                        <div className="mt-7">
-                          <p className="font-semibold mb-2">Assigned Body</p>
-                          <p>Majinte human rights law firm</p>
-                        </div>
-                        <div className="mt-10">
-                          <p className="font-semibold mb-2">
-                            Attached Documents
-                          </p>
-                          <button className="flex items-center gap-2 px-5 py-2 text-sm border border-current rounded text-primaryBlue">
-                            <AiOutlineCloudDownload size={22} />
-                            Download Attachement
-                          </button>
-                        </div>
-                      </div>
-                      <p className="mt-7 text-sm font-semibold">20/07/2023</p>
-                    </div>
-                  </div>
-                </div>
+                <SelectedSupport
+                  userEmail={selectedUser.email}
+                  selectedSupport={selectedSupport}
+                  getUserSupports={fetchUserDetails}
+                  handleShowSuppportDetails={handleShowSuppportDetails}
+                />
               )}
             </>
           )}

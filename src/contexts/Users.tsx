@@ -4,8 +4,20 @@ interface Props {
   children: React.ReactNode;
 }
 
+interface IUser {
+  _id: string;
+  name?: string;
+  phone?: string;
+  location?: string;
+  age?: string;
+  email?: string;
+  gender?: string;
+  occupation?: string;
+  marital_status?: string;
+}
+
 interface UsersContextValue {
-  loggedInUser: Object;
+  loggedInUser: IUser;
   setLoggedInUser: Function;
 }
 
@@ -23,7 +35,7 @@ const Users: React.FC<Props> = ({ children }) => {
     window.localStorage.setItem("farcry_user", JSON.stringify(loggedInUser));
   }, [loggedInUser]);
 
-console.log(loggedInUser)
+  console.log(loggedInUser);
 
   return (
     <UsersContext.Provider value={{ loggedInUser, setLoggedInUser }}>

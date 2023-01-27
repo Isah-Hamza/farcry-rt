@@ -5,7 +5,10 @@ const apiEndpoints = {
   LOGIN: "auth/login",
   REPORT: "report",
   SUPPORT: "support",
-  MESSAGE: "message"
+  MESSAGE: "message",
+  USERS: "user",
+  ANALYTICS: "analytics",
+  PARTNERS: "partners"
 };
 
 export { apiEndpoints, BASE_URL };

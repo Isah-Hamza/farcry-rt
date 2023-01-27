@@ -9,18 +9,6 @@ import logout from "../assets/images/log-out.png";
 
 export const sidebarList = [
   {
-    title: "profile",
-    icon: (
-      <img className="w-4 h-4 object-contain" src={profile} alt="profile" />
-    ),
-    url: "/profile",
-  },
-  {
-    title: "report",
-    icon: <img className="w-4 h-4 object-contain" src={report} alt="report" />,
-    url: "/report",
-  },
-  {
     title: "case-status",
     icon: (
       <img
@@ -29,29 +17,41 @@ export const sidebarList = [
         alt="case-study"
       />
     ),
-    url: "/case-status",
+    url: "/case-status"
+  },
+  {
+    title: "profile settings",
+    icon: (
+      <img className="w-4 h-4 object-contain" src={profile} alt="profile" />
+    ),
+    url: "/profile"
+  },
+  {
+    title: "report",
+    icon: <img className="w-4 h-4 object-contain" src={report} alt="report" />,
+    url: "/report"
   },
   {
     title: "messages",
     icon: (
       <img className="w-4 h-4 object-contain" src={messages} alt="messages" />
     ),
-    url: "/messages",
+    url: "/messages"
   },
   {
     title: "Donation",
     icon: <img className="w-4 h-4 object-contain" src={donate} alt="donate" />,
-    url: "/donation",
+    url: "/donation"
   },
-  {
-    title: "settings",
-    icon: (
-      <img className="w-4 h-4 object-contain" src={settings} alt="settings" />
-    ),
-  },
+  // {
+  //   title: "settings",
+  //   icon: (
+  //     <img className="w-4 h-4 object-contain" src={settings} alt="settings" />
+  //   )
+  // },
   {
     title: "logout",
     icon: <img className="w-4 h-4 object-contain" src={logout} alt="logout" />,
-    url: "",
-  },
+    url: ""
+  }
 ];
