@@ -45,7 +45,7 @@ const CaseStatus = () => {
     //@ts-ignore
     { name: "verified", value: analytics?.verifiedCount },
     //@ts-ignore
-    { name: "In Progress", value: analytics?.inProgressCount },
+    { name: "In Progress", value: analytics?.p },
     //@ts-ignore
     { name: "Completed", value: analytics?.completedCount }
   ];

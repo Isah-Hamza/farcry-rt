@@ -67,7 +67,7 @@ const Profile = () => {
       <Header dashboard />
       <div className="flex-1 flex">
         <DashboardSidebar sidebarList={sidebarList} />
-        <main className="w-full lg:w-4/5 bg-[#DBDFEAA6] h-full">
+        <main className="w-full lg:w-4/5 bg-[#DBDFEAA6] overflow-y-auto h-[calc(100vh-5rem)]">
           <div className="ml-5 sm:ml-20 mt-7 sm:mt-20 mb-10 ">
             <p className="text-2xl font-bold mb-10">User Profile</p>
             <form
