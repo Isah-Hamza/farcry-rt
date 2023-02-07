@@ -48,7 +48,7 @@ const Donate = () => {
     e.preventDefault();
     const paystack = new PaystackPop();
     paystack.newTransaction({
-      key: "pk_test_ffd903094679d0b0f72c72cc213f949b987e39ad",
+      key: "pk_test_8e54a4bc351160baec263445129d19fdbc078f61",
       firstName: fname,
       lastName: lname,
       email,

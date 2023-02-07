@@ -8,8 +8,10 @@ import farcry from "../assets/images/farcry.svg";
 import Services from "../components/Services";
 import NewsLetter from "../components/NewsLetter";
 import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom";
 
 const Homepage = () => {
+  const navigate = useNavigate();
   return (
     <>
       <main className="pt-5 md:pt-10">
@@ -23,7 +25,10 @@ const Homepage = () => {
               Those who deny freedom to others deserve it not{" "}
               <br className="hidden lg:block" /> for themselves.
             </p>
-            <button className="cursor-pointer flex items-center space-x-4 rounded-md px-7 py-3 bg-primaryBlue text-white">
+            <button
+              onClick={() => navigate("/login")}
+              className="cursor-pointer flex items-center space-x-4 rounded-md px-7 py-3 bg-primaryBlue text-white"
+            >
               <span>Get Support Now</span>
               <span className="text-2xl -mt-1">&rarr;</span>
             </button>
@@ -50,7 +55,9 @@ const Homepage = () => {
                 nisi consectetur. Deserunt tempor exercitation occaecat
                 consectetur fugiat. Ea nisi aliqua occaecat ndeserunt{" "}
               </p>
-              <button className="mt-6 flex items-center space-x-4 rounded-md px-10 py-3 bg-primaryBlue text-white">
+              <button 
+              onClick={() => navigate('/contact-us')} 
+              className="mt-6 flex items-center space-x-4 rounded-md px-10 py-3 bg-primaryBlue text-white">
                 <span>Contact Us</span>
                 {/* <!-- <span className="text-2xl -mt-1" >
                             &rarr;
@@ -155,7 +162,7 @@ const Homepage = () => {
                 Take time out to view tips on how to be your own security and
                 safety personel in our absence{" "}
               </p>
-              <button className="mt-6 flex items-center space-x-4 rounded-md px-16 py-3 bg-gold text-white">
+              <button onClick={() => navigate('/donate')} className="mt-6 flex items-center space-x-4 rounded-md px-16 py-3 bg-gold text-white">
                 <span>Donate</span>
               </button>
             </div>
