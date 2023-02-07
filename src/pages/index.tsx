@@ -49,11 +49,9 @@ const Homepage = () => {
             </div>
             <div className="max-w-[400px] ">
               <p>
-                Ullamco pariatur veniam eu nostrud. Dolor eiusmod occaecat
-                excepteur occaecat eiusmod elit ad pariatur sit eiusmod cillum
-                dolor aliquip. Do amet tempor sunt cillum nulla dolor labore
-                nisi consectetur. Deserunt tempor exercitation occaecat
-                consectetur fugiat. Ea nisi aliqua occaecat ndeserunt{" "}
+              We are a non-profit organization dedicated to connecting crime victims with 
+              appropriate bodies and agents who can assist them in obtaining redress 
+              for the crime(s) they have experienced at some point in their lives.{" "}
               </p>
               <button 
               onClick={() => navigate('/contact-us')} 
