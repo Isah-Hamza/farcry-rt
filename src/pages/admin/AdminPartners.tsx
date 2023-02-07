@@ -15,7 +15,6 @@ import { ImSpinner2 } from "react-icons/im";
 import { trim } from "./AdminDashboard";
 import { IPartner } from "../../extra/types";
 
-
 const AdminPartners = () => {
   const [allPartners, setAllPartners] = useState([] as Array<IPartner>);
   const [createPartnerLoading, setCreatePartnerLoading] = useState(false);
@@ -80,7 +79,7 @@ const AdminPartners = () => {
       <Header dashboard />
       <div className="flex-1 flex">
         <DashboardSidebar sidebarList={sidebarList} />
-        <main className="w-full lg:w-4/5 bg-[#fff] h-full px-10 ">
+        <main className="w-full lg:w-4/5 bg-[#fff] px-10 overflow-y-auto h-[calc(100vh-5rem)]">
           <div className="h-full flex flex-col">
             <div className="mt-8 flex items-center justify-between pb-5 border-b">
               <p className="text-xl font-semibold">Our Amazing Partners</p>
@@ -141,7 +140,7 @@ const AdminPartners = () => {
                             src={mijenti}
                             alt="alternative"
                           />
-                            <div className="flex-1 mx-7">
+                          <div className="flex-1 mx-7">
                             <p>{item.description}</p>
                             <p className="font-medium">{item.email}</p>
                           </div>
@@ -173,8 +172,8 @@ const AdminPartners = () => {
                             src={mijenti}
                             alt="alternative"
                           />
-                            <div className="flex-1 mx-7">
-                            <p>{trim(item.description,70)}</p>
+                          <div className="flex-1 mx-7">
+                            <p>{trim(item.description, 70)}</p>
                             <p className="font-medium">{item.email}</p>
                           </div>
                           <button className="text-white text-sm px-6 py-1.5 rounded bg-blue-500">
